@@ -3,121 +3,74 @@ package controllers
 import (
 	"github.com/astaxie/beego"
 	"encoding/json"
-	"strings"
-	"net/http"
+	"git.gumpcome.com/gumpoa/logic"
+	"git.gumpcome.com/gumpoa/models"
 )
 
 // 用户和用户权限相关的控制器
-
 type UserController struct {
 	beego.Controller
 }
 
-// 登录信息
-type UserInfo struct {
-	Account  string `json:"account"`
-	Password string `json:"password"`
+
+
+// @Title 用户登出
+// @router /logout [get]
+func (this *UserController) Logout() {
+	if user := this.GetSession("user"); user != nil {
+		this.DestroySession()
+	}
 }
 
-
-// @router /authenticate [post]
-func (this *UserController) Authenticate() {
-	// 验证用户身份
+// @Title 用户是否已经登录
+// @router /haslogined [get]
+func (this *UserController) HasLogined() {
 
 	// 返回数据
-	result := map[string]interface{}{"data": map[string]interface{}{}, "msg": "响应成功", "code": 200}
+	result := models.NewResult()
+
+	// 用户没有登录
+	if user := this.GetSession("user"); user == nil {
+		result["msg"] = "用户没有登录"
+		result["code"] = models.BusinessWrong
+		this.Data["json"] = result
+		this.ServeJSON()
+		return
+	}
+
+	// 用户已经登录
+	result["msg"] = "用户已经登录"
+	result["code"] = 200
+	this.Data["json"] = result
+	this.ServeJSON()
+	return
+}
+
+// @Title 用户登录
+// @router /login [post]
+func (this *UserController) Login() {
 
 	// 1. 获取请求的 账号+密码
-	var info UserInfo
+	var info models.UserInfo
 	json.Unmarshal(this.Ctx.Input.RequestBody, &info)
+	//fmt.Println(string(this.Ctx.Input.RequestBody))
 
 	//  如果是管理员账号， 管理员登录 管理员账户信息不放在配置文件时，删除这个判断
-	if a := beego.AppConfig.String("admin_account"); strings.Compare(a, info.Account) == 0 {
-		this.adminLogin(info)
+	if admin_account := beego.AppConfig.String("admin_account"); admin_account == info.Account {
+		this.Data["json"], _ = logic.CheckAdmin(info)
+		this.ServeJSON()
+		return
 	}
 
 	// 员工登录
-	// 2. 数据库中验证账号密码
-	flag := strings.Compare("wss", info.Account) == 0
-
-	if !flag {
-		// 登录失败
-		result["msg"] = "账号或密码错误"
-		result["code"] = 10003
-		this.Data["json"] = result
-		this.ServeJSON()
-	}
-
-	// login
-	// 账号密码正确， session记录 传递给前端跳转地址
-	this.SetSession("user", info.Account)
-	result["data"] = map[string]interface{}{"to": "http://localhost:8080/oa/home"}
-	result["msg"] = "成功登录"
-	result["code"] = http.StatusOK
-	this.Data["json"] = result
-	this.ServeJSON()
-}
-
-// 管理员登录
-func (this *UserController) adminLogin(info UserInfo) {
-	// 返回数据
-	result := map[string]interface{}{"data": map[string]interface{}{}, "msg": "响应成功", "code": 200}
-
-	// 1. 查询管理员的账号密码
-	admin_account := beego.AppConfig.String("admin_account")
-	admin_password := beego.AppConfig.String("admin_pwd")
-
 	// 2. 验证账号密码
-	if strings.Compare(admin_password, info.Password) != 0 {
-		// 登录失败
-		result["msg"] = "密码错误"
-		result["code"] = 10003
-		this.Data["json"] = result
-		this.ServeJSON()
+	var ok bool
+	this.Data["json"], ok = logic.CheckUser(info)
+	if ok {
+		// 账号密码正确, session保存用户状态
+		this.SetSession("user", info.Account)
 	}
 
-	// 3. 登录成功
-	this.SetSession("user", admin_account)
-	result["msg"] = "成功登录"
-	result["code"] = http.StatusOK
-	this.Data["json"] = result
 	this.ServeJSON()
-
+	return
 }
-
-
-// @router /authenticate [post]
-func (this *UserController) FindAccess() {
-	// 获得用户权限
-
-	// 返回数据
-	result := map[string]interface{}{"data": map[string]interface{}{}, "msg": "响应成功", "code": 200}
-
-	// 1. 获得account参数
-	account := this.GetString("account")
-
-	if account == "" {
-		// 缺少account参数 报错
-		result["code"] = 10003
-		result["msg"] = "查询失败，缺少账号信息"
-		this.Data["json"] = result
-		this.ServeJSON()
-	}
-
-	result["code"] = http.StatusOK
-	result["msg"] = "查询成功"
-	this.Data["json"] = result
-	this.ServeJSON()
-}
-
-// @router /logout [get]
-func (this *UserController) Logout() {
-
-	if user := this.GetSession("user"); user != nil {
-		//this.DelSession("user")
-		this.DestroySession()
-		this.Redirect("/oa/login", 302)
-	}
-
-}
-

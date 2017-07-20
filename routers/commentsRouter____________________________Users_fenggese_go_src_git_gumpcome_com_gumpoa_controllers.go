@@ -7,35 +7,19 @@ import (
 
 func init() {
 
-	beego.GlobalControllerRouter["git.gumpcome.com/gumpoa/controllers:HomeController"] = append(beego.GlobalControllerRouter["git.gumpcome.com/gumpoa/controllers:HomeController"],
+	beego.GlobalControllerRouter["git.gumpcome.com/gumpoa/controllers:AccessController"] = append(beego.GlobalControllerRouter["git.gumpcome.com/gumpoa/controllers:AccessController"],
 		beego.ControllerComments{
-			Method: "Home",
+			Method: "FindList",
+			Router: `/find_list`,
+			AllowHTTPMethods: []string{"get"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["git.gumpcome.com/gumpoa/controllers:IndexController"] = append(beego.GlobalControllerRouter["git.gumpcome.com/gumpoa/controllers:IndexController"],
+		beego.ControllerComments{
+			Method: "Index",
 			Router: `/`,
 			AllowHTTPMethods: []string{"get"},
-			MethodParams: param.Make(),
-			Params: nil})
-
-	beego.GlobalControllerRouter["git.gumpcome.com/gumpoa/controllers:LoginController"] = append(beego.GlobalControllerRouter["git.gumpcome.com/gumpoa/controllers:LoginController"],
-		beego.ControllerComments{
-			Method: "Login",
-			Router: `/login`,
-			AllowHTTPMethods: []string{"get"},
-			MethodParams: param.Make(),
-			Params: nil})
-
-	beego.GlobalControllerRouter["git.gumpcome.com/gumpoa/controllers:UserController"] = append(beego.GlobalControllerRouter["git.gumpcome.com/gumpoa/controllers:UserController"],
-		beego.ControllerComments{
-			Method: "Authenticate",
-			Router: `/authenticate`,
-			AllowHTTPMethods: []string{"post"},
-			MethodParams: param.Make(),
-			Params: nil})
-
-	beego.GlobalControllerRouter["git.gumpcome.com/gumpoa/controllers:UserController"] = append(beego.GlobalControllerRouter["git.gumpcome.com/gumpoa/controllers:UserController"],
-		beego.ControllerComments{
-			Method: "FindAccess",
-			Router: `/authenticate`,
-			AllowHTTPMethods: []string{"post"},
 			MethodParams: param.Make(),
 			Params: nil})
 
@@ -44,6 +28,22 @@ func init() {
 			Method: "Logout",
 			Router: `/logout`,
 			AllowHTTPMethods: []string{"get"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["git.gumpcome.com/gumpoa/controllers:UserController"] = append(beego.GlobalControllerRouter["git.gumpcome.com/gumpoa/controllers:UserController"],
+		beego.ControllerComments{
+			Method: "HasLogined",
+			Router: `/haslogined`,
+			AllowHTTPMethods: []string{"get"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["git.gumpcome.com/gumpoa/controllers:UserController"] = append(beego.GlobalControllerRouter["git.gumpcome.com/gumpoa/controllers:UserController"],
+		beego.ControllerComments{
+			Method: "Login",
+			Router: `/login`,
+			AllowHTTPMethods: []string{"post"},
 			MethodParams: param.Make(),
 			Params: nil})
 
