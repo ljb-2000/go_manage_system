@@ -2,9 +2,11 @@ package controllers
 
 import (
 	"github.com/astaxie/beego"
-	"encoding/json"
 	"git.gumpcome.com/gumpoa/logic"
 	"git.gumpcome.com/gumpoa/models"
+	"git.gumpcome.com/go_kit/logiccode"
+	"git.gumpcome.com/gumpoa/constant"
+	"net/http"
 )
 
 // 用户和用户权限相关的控制器
@@ -49,16 +51,29 @@ func (this *UserController) HasLogined() {
 // @Title 用户登录
 // @router /login [post]
 func (this *UserController) Login() {
+	// 声明响应结构体
+	result := models.CommonResp{http.StatusOK, ""}
 
 	// 1. 获取请求的 账号+密码
-	var info models.UserInfo
-	json.Unmarshal(this.Ctx.Input.RequestBody, &info)
-	//fmt.Println(string(this.Ctx.Input.RequestBody))
+	//var info models.UserInfo
+	//json.Unmarshal(this.Ctx.Input.RequestBody, &info)
+	////fmt.Println(string(this.Ctx.Input.RequestBody))
+
+	user := models.UserInfo{}
+	//解析请求协议,并映射到结构体上。
+	if err := this.ParseForm(&user); err != nil {
+		this.Ctx.Output.JSON(logiccode.ReqParamErrorCode(), true, false)
+		return
+	}
 
 	//  如果是管理员账号， 管理员登录 管理员账户信息不放在配置文件时，删除这个判断
-	if admin_account := beego.AppConfig.String("admin_account"); admin_account == info.Account {
-		this.Data["json"], _ = logic.CheckAdmin(info)
-		this.ServeJSON()
+	if admin_account := beego.AppConfig.String("admin_account"); admin_account == user.Account {
+		isOK := logic.CheckAdmin(&user)
+		if !isOK {
+			this.Ctx.Output.JSON(constant.RESP_CODE_ACCOUNT_ERROR, true, false)
+			return
+		}
+		this.Ctx.Output.JSON(result, true, false)
 		return
 	}
 

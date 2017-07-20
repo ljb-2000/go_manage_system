@@ -3,3 +3,6 @@
 logs
 lastupdate.tmp
 gotemplate
+gumpoa.iml
+gumpoa
+routers/commentsRouter_controllers.go
