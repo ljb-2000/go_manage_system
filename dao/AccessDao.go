@@ -1,53 +1,41 @@
 package dao
 
 import (
-	"git.gumpcome.com/gumpoa/models"
 	"git.gumpcome.com/go_kit/dbkit"
-	"fmt"
-	"git.gumpcome.com/go_kit/logiccode"
+	"git.gumpcome.com/gumpoa/constant"
 )
 
-func AddAccessDao(user *models.Access) (bool, error) {
+const (
+	TableName = "access"
+)
 
-	sql := `INSERT access SET code=?, name=?`
+// @Title 添加权限
+// @return 是否成功(bool)、插入后的ID(int64)、报错信息(error)
+func AddAccessDao(params *map[string]interface{}) (bool, int64, error) {
 
-	// 2. 获得连接
-	db, err := dbkit.GetMysqlCon("gumpoa")
-	return false, logiccode.DbInsertErrorCode()
+	// 1. 获得连接
+	db, err := dbkit.GetMysqlCon(constant.MYSQL_CFNAME)
+	if err != nil {
+		return false, 0, err
+	}
 
-	// 3. 创建SQL语句
-	stmt, err := db.Prepare(`INSERT access SET code=?, name=?`)
-	checkErr(err)
-
-	// 4. 执行SQL
-	res, err := stmt.Exec("103", "无视我")
-	checkErr(err)
-
-	// 5. 判断结果
-	rowCount, err := res.RowsAffected()
-	checkErr(err)
-
-	db.Close()
-	fmt.Println(rowCount == 1)
-
-
-
+	// 2. 保存数据
+	return dbkit.SaveInMysql(db, TableName, *params)
 }
 
+// @Title 删除权限
+// @return 是否成功(bool)、插入后的ID(int64)、报错信息(error)
+func DeleteAccessDao(params *map[string]interface{}) (bool, error) {
 
-func DeleteAccessDao(id int64) (bool, error) {
+	// 1. 获得连接
+	db, err := dbkit.GetMysqlCon(constant.MYSQL_CFNAME)
+	if err != nil {
+		return false, err
+	}
 
+	// 2. 生成删除的SQL语句
+	sql, data := dbkit.CreateDeleteMysqlSQL(TableName, *params)
+
+	// 3. 删除数据
+	return dbkit.DeleteInMysql(db, sql, data...)
 }
-
-func UpdateAccessDao(data map[string]interface{}) (bool, error) {
-
-}
-
-func FindAccessDao(id int) (map[string]interface{}, error) {
-
-}
-
-//func PageAccessDao(filter *models.PageAccessFilter) (dbkit.Page, error) {
-//
-//}
-

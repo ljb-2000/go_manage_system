@@ -4,14 +4,14 @@ package models
 
 //登录信息
 type UserInfo struct {
-	Account  string `json:"account"`
-	Password string `json:"password"`
+	Account  string `json:"account" form:"account" desc:"账号"`
+	Password string `json:"password" form:"password" desc:"密码"`
 }
 
 //权限资源
 type Access struct {
-	ID         int 		`json:"id" desc:"序号"`
-	Name       string 	`json:"access_name" desc:"权限名"`
-	Code       int 		`json:"access_code" desc:"权限码"`
-	CreateTime string 	`json:"create_time" desc:"创建时间"`
+	ID         int 		`json:"id" form:"id" desc:"序号"`
+	Code       int 		`json:"code" form:"code" desc:"权限码"`
+	Name       string 	`json:"name" form:"name" desc:"权限名"`
+	CreateTime string 	`json:"create_time" form:"create_time" desc:"创建时间"`
 }

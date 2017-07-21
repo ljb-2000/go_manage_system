@@ -19,10 +19,10 @@ func main() {
 	dbUserName := beego.AppConfig.String("mysql_user")
 	dbUserPwd := beego.AppConfig.String("mysql_pwd")
 	dbHost := beego.AppConfig.String("mysql_host")
-	dbName := beego.AppConfig.String("mysql_db")
-	dbCfgName := constant.CONSTANT_MYSQL_CFNAME
+	dbName := beego.AppConfig.String("mysql_db_name")
 	dbMaxIdle, _ := beego.AppConfig.Int("mysql_maxidle")
 	dbMaxActive, _ := beego.AppConfig.Int("mysql_maxactive")
+	dbCfgName := constant.MYSQL_CFNAME
 	dbkit.InitMysql(dbUserName, dbUserPwd, dbHost, dbName, dbCfgName, dbMaxIdle, dbMaxActive)
 
 	// 404
@@ -34,7 +34,6 @@ func main() {
 		result, _ := json.Marshal(data)
 		w.Write(result)
 	})
-
 
 	beego.Run()
 }

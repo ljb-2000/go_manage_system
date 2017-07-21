@@ -1,3 +1,3 @@
 package constant
 
-var CONSTANT_MYSQL_CFNAME = "gumpoa"
+var MYSQL_CFNAME = "gumpoa"

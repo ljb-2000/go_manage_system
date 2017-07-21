@@ -17,7 +17,7 @@ type MenuItem struct {
 
 // @Title 生成菜单
 // @Description 还没有查询数据库，账号管理模块完成后还要修改
-func CreateMenus(account string) (*[]SubMenu, bool) {
+func CreateMenusLogic(account string) (*[]SubMenu, bool) {
 
 	// 账户管理 菜单项
 	account_menu_items := []MenuItem{
