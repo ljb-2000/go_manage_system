@@ -1,6 +1,6 @@
 *.log
 .idea/
-logs
+logs/
 lastupdate.tmp
 gotemplate
 gumpoa.iml

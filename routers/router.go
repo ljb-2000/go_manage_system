@@ -23,14 +23,14 @@ func init() {
 	ns := beego.NewNamespace("/api.gumpcome.com/oa",
 		// api
 		beego.NSNamespace("/v1",
-			beego.NSNamespace("/user",
-				// /api.gumpcome.com/oa/v1/user
-				beego.NSInclude(&controllers.UserController{}),
-			),
-			beego.NSNamespace("/access",
-				// /api.gumpcome.com/oa/v1/access
-				beego.NSInclude(&controllers.AccessController{}),
-			),
+			// /api.gumpcome.com/oa/v1/user
+			beego.NSNamespace("/user", beego.NSInclude(&controllers.UserController{})),
+			// /api.gumpcome.com/oa/v1/access
+			beego.NSNamespace("/access", beego.NSInclude(&controllers.AccessController{})),
+			// /api.gumpcome.com/oa/v1/role
+			beego.NSNamespace("/role", beego.NSInclude(&controllers.RoleController{})),
+			// /api.gumpcome.com/oa/v1/account
+			beego.NSNamespace("/account", beego.NSInclude(&controllers.AccountController{})),
 		),
 	)
 	beego.AddNamespace(ns)

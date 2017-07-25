@@ -4,6 +4,7 @@ import (
 	"git.gumpcome.com/gumpoa/models"
 	"git.gumpcome.com/gumpoa/dao"
 	"git.gumpcome.com/gumpoa/constant"
+	"git.gumpcome.com/go_kit/dbkit"
 )
 
 // @Title 添加权限
@@ -41,4 +42,9 @@ func DeleteAccessLogic(access *models.Access) (bool, error) {
 
 	// 3. 删除权限
 	return dao.DeleteAccessDao(&params)
+}
+
+// @Title 分页查找权限
+func PageAccessLogic(filter *models.PageAccessFilter) (dbkit.Page, error)  {
+	return dao.PageAccessDao(filter)
 }

@@ -8,10 +8,55 @@ type UserInfo struct {
 	Password string `json:"password" form:"password" desc:"密码"`
 }
 
-//权限资源
+// *********************权限***********************
+// 权限
 type Access struct {
-	ID         int 		`json:"id" form:"id" desc:"序号"`
-	Code       int 		`json:"code" form:"code" desc:"权限码"`
-	Name       string 	`json:"name" form:"name" desc:"权限名"`
-	CreateTime string 	`json:"create_time" form:"create_time" desc:"创建时间"`
+	ID         int       `json:"id" form:"id" desc:"序号"`
+	Code       int       `json:"code" form:"code" desc:"权限码"`
+	Name       string    `json:"name" form:"name" desc:"权限名"`
+	CreateTime string    `json:"create_time" form:"create_time" desc:"创建时间"`
+}
+
+// 权限分页查找
+type PageAccessFilter struct {
+	PageNumber int    `form:"page_number" desc:"页码"`
+	PageSize   int    `form:"page_size" desc:"每页最大记录数"`
+}
+
+// *********************角色***********************
+// 角色
+type Role struct {
+	ID         int       `json:"id" form:"id" desc:"序号"`
+	Name       string    `json:"name" form:"name" desc:"角色名"`
+	CreateTime string    `json:"create_time" form:"create_time" desc:"创建时间"`
+}
+
+// 角色权限
+type RoleAccess struct {
+	ID         int       `json:"id" form:"id" desc:"序号"`
+	RoleID     int       `json:"role_id" form:"role_id" desc:"角色ID"`
+	AccessID   int       `json:"access_id" form:"access_id" desc:"权限ID"`
+	CreateTime string    `json:"create_time" form:"create_time" desc:"创建时间"`
+}
+
+// 角色分页查找
+type PageRoleFilter struct {
+	PageNumber int    `form:"page_number" desc:"页码"`
+	PageSize   int    `form:"page_size" desc:"每页最大记录数"`
+}
+
+// *********************账号***********************
+type Account struct {
+	ID         int       `json:"id" form:"id" desc:"序号"`
+	LoginName  string    `json:"login_name" form:"login_name" desc:"账号"`
+	LoginPwd   string    `json:"login_pwd" form:"login_pwd" desc:"密码"`
+	UserName   string    `json:"user_name" form:"user_name" desc:"用户名"`
+	RoleID     int       `json:"role_id" form:"role_id" desc:"角色ID"`
+	CreateTime string    `json:"create_time" form:"create_time" desc:"创建时间"`
+}
+
+// 账号分页查找
+type PageAccountFilter struct {
+	PageNumber int    `form:"page_number" desc:"页码"`
+	PageSize   int    `form:"page_size" desc:"每页最大记录数"`
 }
