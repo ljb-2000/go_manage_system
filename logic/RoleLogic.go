@@ -40,7 +40,7 @@ func BindAccessLogic(roleAccess *models.RoleAccess) (bool, int64, error) {
 		"access_id": roleAccess.AccessID,
 	}
 
-	// 3. 添加角色
+	// 3. 绑定权限
 	return dao.BindAccessDao(&params)
 }
 
@@ -60,7 +60,7 @@ func UnbindAccessLogic(roleAccess *models.RoleAccess) (bool, error) {
 		"access_id": roleAccess.AccessID,
 	}
 
-	// 3. 删除权限
+	// 3. 解除权限
 	return dao.UnbindAccessDao(&params)
 }
 
@@ -70,8 +70,8 @@ func PageRoleLogic(filter *models.PageRoleFilter) (dbkit.Page, error)  {
 }
 
 // @Title 查询角色的权限
-func AccessQueryLogic(role_id int64) ([]map[string]interface{}, error) {
-	return dao.AccessQueryDao(role_id)
+func AccessQueryByRoleLogic(role_id int64) ([]map[string]interface{}, error) {
+	return dao.AccessQueryByRoleDao(role_id)
 }
 
 // @Title 删除角色

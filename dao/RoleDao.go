@@ -78,8 +78,8 @@ func PageRoleDao(filter *models.PageRoleFilter) (dbkit.Page, error) {
 
 
 // @Title 查询角色的权限
-// @return 是否成功(bool)、插入后的ID(int64)、报错信息(error)
-func AccessQueryDao(role_id int64) ([]map[string]interface{}, error) {
+// @return 查询结果、报错信息(error)
+func AccessQueryByRoleDao(role_id int64) ([]map[string]interface{}, error) {
 
 	// 1. 获得连接
 	db, err := dbkit.GetMysqlCon(constant.MYSQL_CFNAME)
@@ -93,7 +93,7 @@ func AccessQueryDao(role_id int64) ([]map[string]interface{}, error) {
 	AND role_access.role_id = ? LIMIT 100;`
 
 	// 3. 查询
-	return dbkit.FindInMysql(db, sql, []string{"user_id", "user_age"}, []interface{}{role_id}...)
+	return dbkit.FindInMysql(db, sql, []string{"id", "code"}, []interface{}{role_id}...)
 }
 
 // @Title 删除角色
@@ -101,7 +101,7 @@ func AccessQueryDao(role_id int64) ([]map[string]interface{}, error) {
 // @return 是否成功(bool)、报错信息(error)
 func DeleteRoleDao(id int) (bool, error) {
 	db, _ := dbkit.GetMysqlCon(constant.MYSQL_CFNAME)
-	//删除用户地址
+	//删除角色
 	sql := `DELETE FROM role WHERE id=?`
 
 	beego.BeeLogger.Debug(sql)
@@ -133,7 +133,7 @@ func DeleteRoleDao(id int) (bool, error) {
 		return false, logiccode.DbDeleteErrorCode()
 	}
 
-	//删除用户信息
+	//删除角色权限关联表
 	sql = `DELETE FROM role_access WHERE role_id=?`
 
 	beego.BeeLogger.Debug(sql)
@@ -145,17 +145,19 @@ func DeleteRoleDao(id int) (bool, error) {
 		return false, logiccode.DbInsertErrorCode()
 	}
 
-	result, err = stmt.Exec(id)
+	// 因为存在没有权限的角色，所以对角色关联表的删除结果不做处理。
+	_, err = stmt.Exec(id)
 	if err != nil {
 		tx.Rollback()
 		beego.BeeLogger.Error("%v", err)
 		return false, logiccode.DbDeleteErrorCode()
 	}
 
-	rowsNum, _ = result.RowsAffected() //影响的总行数
-	if rowsNum == 0 {
-		return false, logiccode.DbDeleteErrorCode()
-	}
+	// 这段注释代码，先保留
+	//rowsNum, _ = result.RowsAffected() //影响的总行数
+	//if rowsNum == 0 {
+	//	return false, logiccode.DbDeleteErrorCode()
+	//}
 
 	return true, nil
 }

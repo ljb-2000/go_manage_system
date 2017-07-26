@@ -8,8 +8,9 @@ import "git.gumpcome.com/go_kit/logiccode"
 var RESP_CODE_PARAMS_ERROR = logiccode.New(4000, "参数错误")
 var RESP_CODE_PARAMS_VALUE_ERROR = logiccode.New(4001, "参数不合法")
 
-// 账号 account 10-19
-var RESP_CODE_ACCOUNT_ERROR = logiccode.New(4010, "账户或密码错误")
+// 登录 login 10-19
+var RESP_CODE_ADMIN_LOGIN_ERROR = logiccode.New(4010, "管理员账户或密码错误")
+var RESP_CODE_LOGIN_ERROR = logiccode.New(4011, "用户账户或密码错误")
 
 // 权限 access 20-29
 var RESP_CODE_ACCESS_ADD_ERROR = logiccode.New(4020, "权限添加失败")
@@ -29,5 +30,6 @@ var RESP_CODE_ROLE_PAGE_ERROR = logiccode.New(4034, "角色分页查询失败")
 var RESP_CODE_ACCOUNT_ADD_ERROR = logiccode.New(4040, "账号添加失败")
 var RESP_CODE_ACCOUNT_DELETE_ERROR = logiccode.New(4041, "账号删除失败")
 var RESP_CODE_ACCOUNT_PAGE_ERROR = logiccode.New(4042, "账号分页查询失败")
+var RESP_CODE_ACCOUNT_ACCESSES_ERROR = logiccode.New(4043, "账号权限查询失败")
 
 

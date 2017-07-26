@@ -97,7 +97,7 @@ func (this *RoleController) RoleAccessBind() {
 
 
 // @Title 为角色解绑权限
-// @reveive （ 角色ID: role_id 权限ID: access_id ）或（ 角色权限表ID: id ）
+// @reveive 角色ID: role_id 权限ID: access_id
 // @router /unbind [post]
 func (this *RoleController) RoleAccessUnbind() {
 	// 声明响应结构体
@@ -199,7 +199,7 @@ func (this *RoleController) AccessQuery() {
 	}
 
 	// 3. 查询权限
-	accesses, err := logic.AccessQueryLogic(role_id)
+	accesses, err := logic.AccessQueryByRoleLogic(role_id)
 	if err != nil {
 		this.Ctx.Output.JSON(err, true, false)
 		return

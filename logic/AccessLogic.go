@@ -48,3 +48,4 @@ func DeleteAccessLogic(access *models.Access) (bool, error) {
 func PageAccessLogic(filter *models.PageAccessFilter) (dbkit.Page, error)  {
 	return dao.PageAccessDao(filter)
 }
+

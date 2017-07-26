@@ -97,36 +97,36 @@ func (this *AccessController) AccessDelete() {
 	this.Ctx.Output.JSON(result, true, false)
 }
 
-
-// @Title 根据账号查找权限列表
-// @receive 账号: account
-// @router /get_menus [get]
-func (this *AccessController) CreateMenus() {
-	// 声明响应结构体
-	result := models.CommonWithDataResp{Code: http.StatusOK}
-
-	// 1. 获取并解析请求的 权限信息
-	account := this.GetString("account")
-
-	// 2. 检查参数
-	if account == "" {
-		// 参数不合法
-		this.Ctx.Output.JSON(constant.RESP_CODE_PARAMS_VALUE_ERROR, true, false)
-		return
-	}
-
-	// 3. 生成菜单
-	menus, ok := logic.CreateMenusLogic(account)
-	if !ok {
-		// 生成权限菜单失败
-		this.Ctx.Output.JSON(constant.RESP_CODE_ACCESS_MENUS_ERROR, true, false)
-		return
-	}
-	// 生成权限菜单成功
-	result.Msg = "菜单查询成功"
-	result.Data = map[string]interface{}{"menus": menus}
-	this.Ctx.Output.JSON(result, true, false)
-}
+//
+//// @Title 根据账号查找权限列表
+//// @receive 账号: account
+//// @router /get_menus [get]
+//func (this *AccessController) CreateMenus() {
+//	// 声明响应结构体
+//	result := models.CommonWithDataResp{Code: http.StatusOK}
+//
+//	// 1. 获取并解析请求的 权限信息
+//	account := this.GetString("account")
+//
+//	// 2. 检查参数
+//	if account == "" {
+//		// 参数不合法
+//		this.Ctx.Output.JSON(constant.RESP_CODE_PARAMS_VALUE_ERROR, true, false)
+//		return
+//	}
+//
+//	// 3. 生成菜单
+//	menus, err := logic.CreateMenusLogic(&account)
+//	if  err != nil {
+//		// 生成权限菜单失败
+//		this.Ctx.Output.JSON(constant.RESP_CODE_ACCESS_MENUS_ERROR, true, false)
+//		return
+//	}
+//	// 生成权限菜单成功
+//	result.Msg = "菜单查询成功"
+//	result.Data = map[string]interface{}{"menus": menus}
+//	this.Ctx.Output.JSON(result, true, false)
+//}
 
 // @Title 权限列表
 // @receive 页数: page_number 每页结果数: page_size

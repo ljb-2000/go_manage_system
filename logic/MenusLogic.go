@@ -1,59 +1,53 @@
 package logic
 
-// 左侧菜单
-type SubMenu struct {
-	Code     int 		`json:"code" desc:"权限码"`
-	Name     string     `json:"name" desc:"菜单名"`
-	Path     string     `json:"path" desc:"路径名"`
-	IconCls  string     `json:"iconCls" desc:"css的样式"`
-	Children []MenuItem `json:"children" desc:"菜单项"`
+import (
+	"git.gumpcome.com/gumpoa/util"
+	"git.gumpcome.com/gumpoa/models"
+	"encoding/json"
+	"git.gumpcome.com/gumpoa/dao"
+	"github.com/astaxie/beego"
+)
+
+
+// @Title 根据账号对应的权限生成菜单
+func CreateMenusLogic(account *models.Account) (*models.Menus, error){
+
+	// 1. 读取JSON文件 这里是绝对地址，明天到公司再改成相对地址
+	bytes, err := util.ReadFile("/Users/fenggese/go/src/git.gumpcome.com/gumpoa/models/menus.json")
+	if err != nil {
+		return nil, err
+	}
+
+	// 2. 解析JSON
+	var menus models.Menus
+	err = json.Unmarshal(bytes, &menus)
+	if err != nil {
+		return nil, err
+	}
+
+	// 如果是管理员，获得所有菜单
+	if account.LoginName == beego.AppConfig.String("admin_account") {
+		return &menus, nil
+	}
+
+	// 3. 获取账号的权限列表
+	accesses, err := dao.AccessQueryByAccountDao(account.LoginName)
+	if err != nil {
+		return nil, err
+	}
+
+	// 4. 根据权限生成菜单
+	var newMenus models.Menus
+	for _, access := range accesses {
+		for _, sub := range menus.Subs {
+			if sub.Code == access["code"] {
+				newMenus.Subs = append(newMenus.Subs, sub)
+			}
+		}
+	}
+
+	return &newMenus, nil
+
 }
 
-// 菜单项
-type MenuItem struct {
-	Name string `json:"name" desc:"权限名／菜单名"`
-	Path string `json:"path" desc:"路径"`
-}
 
-// @Title 生成菜单
-// @Description 还没有查询数据库，账号管理模块完成后还要修改
-func CreateMenusLogic(account string) (*[]SubMenu, bool) {
-
-	// 账户管理 菜单项
-	account_menu_items := []MenuItem{
-		{"权限管理", "/access"},
-		{"角色管理", "/role"},
-		{"账号管理", "/account"},
-	}
-	// 账户管理
-	accout_menu := SubMenu{
-		101,
-		"账户管理",
-		"/",
-		"el-icon-message",
-		account_menu_items,
-	}
-
-	// 财务结算菜单项（占位用的）
-	settlement_menu_items := []MenuItem{
-		{"财务管理", "#"},
-		{"结算管理", "#"},
-	}
-
-	// 财务结算
-	settlement_menu := SubMenu{
-		102,
-		"财务管理",
-		"/",
-		"el-icon-document",
-		settlement_menu_items,
-	}
-
-	// 左侧菜单
-	menus := []SubMenu{
-		accout_menu,
-		settlement_menu,
-	}
-
-	return &menus, true
-}

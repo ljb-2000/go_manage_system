@@ -8,6 +8,28 @@ type UserInfo struct {
 	Password string `json:"password" form:"password" desc:"密码"`
 }
 
+// *********************菜单***********************
+// 菜单
+type Menus struct {
+	Subs []SubMenu	`json:"menus" desc:"菜单列表"`
+}
+
+// 左侧菜单
+type SubMenu struct {
+	Code     int 		`json:"code" desc:"权限码"`
+	Name     string     `json:"name" desc:"菜单名"`
+	Path     string     `json:"path" desc:"路径名"`
+	IconCls  string     `json:"iconCls" desc:"css的样式"`
+	Children []MenuItem `json:"children" desc:"菜单项"`
+}
+
+// 菜单项
+type MenuItem struct {
+	Name string `json:"name" desc:"权限名／菜单名"`
+	Path string `json:"path" desc:"路径"`
+}
+
+
 // *********************权限***********************
 // 权限
 type Access struct {

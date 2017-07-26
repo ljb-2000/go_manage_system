@@ -24,7 +24,7 @@ func AddAccountLogic(account *models.Account) (bool, int64, error) {
 		"role_id": account.RoleID,
 	}
 
-	// 3. 添加权限
+	// 3. 添加账号
 	return dao.AddAccountDao(&params)
 }
 
@@ -43,7 +43,7 @@ func DeleteAccountLogic(account *models.Account) (bool, error) {
 		"id": account.ID,
 	}
 
-	// 3. 删除权限
+	// 3. 删除账号
 	return dao.DeleteAccountDao(&params)
 }
 
@@ -51,4 +51,35 @@ func DeleteAccountLogic(account *models.Account) (bool, error) {
 // @Title 分页查找账号
 func PageAccountLogic(filter *models.PageAccountFilter) (dbkit.Page, error)  {
 	return dao.PageAccountDao(filter)
+}
+
+// @Title 验证用户登录信息
+func LoginLogic(user *models.UserInfo) (bool, error) {
+	account := models.Account{}
+	account.LoginName = user.Account
+	account.LoginPwd = user.Password
+
+	// 查询数据库
+	count, err := dao.LoginDao(&account)
+	if err != nil {
+		// 数据库查询出错
+		return false, err
+	}
+
+	// 登录失败
+	if count != 1 {
+		return false, nil
+	}
+	// 登录成功
+	return true, nil
+
+}
+
+
+// @Title 查询账号的权限
+func AccessQueryByAccountLogic(account *models.Account) ([]map[string]interface{}, error) {
+	if account.LoginName == "" {
+		return nil, constant.RESP_CODE_ACCOUNT_ACCESSES_ERROR
+	}
+	return dao.AccessQueryByAccountDao(account.LoginName)
 }

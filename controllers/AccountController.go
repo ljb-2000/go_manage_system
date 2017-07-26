@@ -57,7 +57,7 @@ func (this *AccountController) AccountAdd() {
 
 
 // @Title 删除账号
-// @receive 权限: account
+// @receive 账号: account
 // @router /delete [delete]
 func (this *AccountController) AccountDelete() {
 	// 声明响应结构体
@@ -130,5 +130,80 @@ func (this *AccountController) AccountList() {
 	// 查询账号列表成功
 	result.Msg = "账号列表查询成功"
 	result.Data = map[string]interface{}{"page": page}
+	this.Ctx.Output.JSON(result, true, false)
+}
+
+
+// @Title 根据账号查找权限列表
+// @receive 账号 login_name
+// @router /access_list [post]
+func (this *AccountController)AccountAccessListQuery() {
+	// 声明响应结构体
+	result := models.CommonWithDataResp{Code: http.StatusOK}
+
+	// 1. 获取并解析请求的 账号信息
+	account := models.Account{}
+	if err := this.ParseForm(&account); err != nil {
+		// 参数错误
+		this.Ctx.Output.JSON(constant.RESP_CODE_PARAMS_ERROR, true, false)
+		return
+	}
+
+	// 2. 检查参数
+	if account.LoginName == "" {
+		// 参数不合法
+		this.Ctx.Output.JSON(constant.RESP_CODE_PARAMS_VALUE_ERROR, true, false)
+		return
+	}
+
+	// 3. 查询权限
+	accesses,  err := logic.AccessQueryByAccountLogic(&account)
+	if err != nil {
+		// 根据账号查找权限失败
+		this.Ctx.Output.JSON(err, true, false)
+		return
+	}
+
+	// 4. 查找成功
+	result.Msg = "根据账号查找权限列表成功"
+	result.Data = map[string]interface{}{"accesses": accesses}
+	this.Ctx.Output.JSON(result, true, false)
+}
+
+
+
+// @Title 根据账号生成菜单
+// @receive 账号 login_name
+// @router /menus_list [post]
+func (this *AccountController) MenusQuery() {
+	// 声明响应结构体
+	result := models.CommonWithDataResp{Code: http.StatusOK}
+
+	// 1. 获取并解析请求的 账号信息
+	account := models.Account{}
+	if err := this.ParseForm(&account); err != nil {
+		// 参数错误
+		this.Ctx.Output.JSON(constant.RESP_CODE_PARAMS_ERROR, true, false)
+		return
+	}
+
+	// 2. 检查参数
+	if account.LoginName == "" {
+		// 参数不合法
+		this.Ctx.Output.JSON(constant.RESP_CODE_PARAMS_VALUE_ERROR, true, false)
+		return
+	}
+
+	// 3. 生成菜单
+	menus,  err := logic.CreateMenusLogic(&account)
+	if err != nil {
+		// 根据账号生成菜单失败
+		this.Ctx.Output.JSON(err, true, false)
+		return
+	}
+
+	// 4. 查找成功
+	result.Msg = "根据账号生成菜单成功"
+	result.Data = map[string]interface{}{"menus": menus}
 	this.Ctx.Output.JSON(result, true, false)
 }

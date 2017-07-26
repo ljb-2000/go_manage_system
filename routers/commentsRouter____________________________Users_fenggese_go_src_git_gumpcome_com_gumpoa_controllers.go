@@ -25,14 +25,6 @@ func init() {
 
 	beego.GlobalControllerRouter["git.gumpcome.com/gumpoa/controllers:AccessController"] = append(beego.GlobalControllerRouter["git.gumpcome.com/gumpoa/controllers:AccessController"],
 		beego.ControllerComments{
-			Method: "CreateMenus",
-			Router: `/get_menus`,
-			AllowHTTPMethods: []string{"get"},
-			MethodParams: param.Make(),
-			Params: nil})
-
-	beego.GlobalControllerRouter["git.gumpcome.com/gumpoa/controllers:AccessController"] = append(beego.GlobalControllerRouter["git.gumpcome.com/gumpoa/controllers:AccessController"],
-		beego.ControllerComments{
 			Method: "AccessList",
 			Router: `/list`,
 			AllowHTTPMethods: []string{"post"},
@@ -59,6 +51,22 @@ func init() {
 		beego.ControllerComments{
 			Method: "AccountList",
 			Router: `/list`,
+			AllowHTTPMethods: []string{"post"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["git.gumpcome.com/gumpoa/controllers:AccountController"] = append(beego.GlobalControllerRouter["git.gumpcome.com/gumpoa/controllers:AccountController"],
+		beego.ControllerComments{
+			Method: "AccountAccessListQuery",
+			Router: `/access_list`,
+			AllowHTTPMethods: []string{"post"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["git.gumpcome.com/gumpoa/controllers:AccountController"] = append(beego.GlobalControllerRouter["git.gumpcome.com/gumpoa/controllers:AccountController"],
+		beego.ControllerComments{
+			Method: "MenusQuery",
+			Router: `/menus_list`,
 			AllowHTTPMethods: []string{"post"},
 			MethodParams: param.Make(),
 			Params: nil})

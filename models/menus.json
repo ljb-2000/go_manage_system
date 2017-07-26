@@ -1,0 +1,40 @@
+{
+  "menus": [
+    {
+      "code": 100,
+      "name": "账户管理",
+      "path": "/",
+      "iconCls": "el-icon-message",
+      "children": [
+        {
+          "name": "权限管理",
+          "path": "/access"
+        },
+        {
+          "name": "角色管理",
+          "path": "/role"
+        },
+        {
+          "name": "账号管理",
+          "path": "/account"
+        }
+      ]
+    },
+    {
+      "code": 110,
+      "name": "财务管理",
+      "path": "/",
+      "iconCls": "el-icon-document",
+      "children": [
+        {
+          "name": "财务管理",
+          "path": "#"
+        },
+        {
+          "name": "结算管理",
+          "path": "#"
+        }
+      ]
+    }
+  ]
+}

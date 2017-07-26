@@ -31,7 +31,7 @@ func (this *UserController) HasLogined() {
 // @router /login [post]
 func (this *UserController) Login() {
 	// 声明响应结构体
-	result := models.CommonResp{Code: http.StatusOK, Msg: ""}
+	result := models.CommonResp{Code: http.StatusOK}
 
 	// 1. 获取并解析请求的 用户信息
 	user := models.UserInfo{}
@@ -53,7 +53,7 @@ func (this *UserController) Login() {
 		ok := logic.CheckAdmin(&user)
 		if !ok {
 			// 管理员密码错误
-			this.Ctx.Output.JSON(constant.RESP_CODE_ACCOUNT_ERROR, true, false)
+			this.Ctx.Output.JSON(constant.RESP_CODE_ADMIN_LOGIN_ERROR, true, false)
 			return
 		}
 		// 管理员成功登录
@@ -64,14 +64,20 @@ func (this *UserController) Login() {
 
 	// 3. 用户登录
 	// 验证账号密码
-	ok := logic.CheckUser(&user)
-	if !ok {
-		// 用户密码错误
-		this.Ctx.Output.JSON(constant.RESP_CODE_ACCOUNT_ERROR, true, false)
+	ok, err := logic.LoginLogic(&user)
+	if err != nil {
+		// 登录出错，数据库查询错误
+		this.Ctx.Output.JSON(err, true, false)
 		return
 	}
+
+	// 登录失败
+	if !ok {
+		this.Ctx.Output.JSON(constant.RESP_CODE_LOGIN_ERROR, true, false)
+		return
+	}
+
 	// 用户成功登录
 	result.Msg = "用户成功登录"
 	this.Ctx.Output.JSON(result, true, false)
-	return
 }
