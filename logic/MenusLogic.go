@@ -12,8 +12,8 @@ import (
 // @Title 根据账号对应的权限生成菜单
 func CreateMenusLogic(account *models.Account) (*models.Menus, error){
 
-	// 1. 读取JSON文件 这里是绝对地址，明天到公司再改成相对地址
-	bytes, err := util.ReadFile("/Users/fenggese/go/src/git.gumpcome.com/gumpoa/models/menus.json")
+	// 1. 读取JSON文件 相对地址
+	bytes, err := util.ReadFile("./models/menus.json")
 	if err != nil {
 		return nil, err
 	}
