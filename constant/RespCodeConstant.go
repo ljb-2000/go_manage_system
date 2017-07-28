@@ -1,6 +1,6 @@
 package constant
 
-import "git.gumpcome.com/go_kit/logiccode"
+import "git.fenggese.com/go_kit/logiccode"
 
 // 响应业务码
 
@@ -25,11 +25,8 @@ var RESP_CODE_ROLE_ACCESS_UNBIND_ERROR = logiccode.New(4032, "角色解除权限
 var RESP_CODE_ROLE_DELETE_ERROR = logiccode.New(4033, "角色删除失败")
 var RESP_CODE_ROLE_PAGE_ERROR = logiccode.New(4034, "角色分页查询失败")
 
-
 // 账号 account 40-49
 var RESP_CODE_ACCOUNT_ADD_ERROR = logiccode.New(4040, "账号添加失败")
 var RESP_CODE_ACCOUNT_DELETE_ERROR = logiccode.New(4041, "账号删除失败")
 var RESP_CODE_ACCOUNT_PAGE_ERROR = logiccode.New(4042, "账号分页查询失败")
 var RESP_CODE_ACCOUNT_ACCESSES_ERROR = logiccode.New(4043, "账号权限查询失败")
-
-

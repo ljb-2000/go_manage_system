@@ -1,14 +1,10 @@
 package dao
 
 import (
-	"git.gumpcome.com/go_kit/dbkit"
-	"git.gumpcome.com/gumpoa/constant"
-	"git.gumpcome.com/go_kit/strkit"
-	"git.gumpcome.com/gumpoa/models"
-)
-
-const (
-	TableName = "access"
+	"git.fenggese.com/go_kit/dbkit"
+	"git.fenggese.com/go_kit/strkit"
+	"git.fenggese.com/go_manage_system/constant"
+	"git.fenggese.com/go_manage_system/models"
 )
 
 // @Title 添加权限
@@ -22,7 +18,7 @@ func AddAccessDao(params *map[string]interface{}) (bool, int64, error) {
 	}
 
 	// 2. 保存数据
-	return dbkit.SaveInMysql(db, TableName, *params)
+	return dbkit.SaveInMysql(db, constant.ACCESS_TABLE, *params)
 }
 
 // @Title 删除权限
@@ -36,12 +32,11 @@ func DeleteAccessDao(params *map[string]interface{}) (bool, error) {
 	}
 
 	// 2. 生成删除的SQL语句
-	sql, data := dbkit.CreateDeleteMysqlSQL(TableName, *params)
+	sql, data := dbkit.CreateDeleteMysqlSQL(constant.ACCESS_TABLE, *params)
 
 	// 3. 删除数据
 	return dbkit.DeleteInMysql(db, sql, data...)
 }
-
 
 // @Title 权限分页查找
 // @return 分页结果(dbkitPage)、报错信息(error)
@@ -56,6 +51,9 @@ func PageAccessDao(filter *models.PageAccessFilter) (dbkit.Page, error) {
 	sqlExceptSelect.Append("FROM access WHERE 1=1")
 
 	// 分页查找
-	db, _ := dbkit.GetMysqlCon(constant.MYSQL_CFNAME)
+	db, err := dbkit.GetMysqlCon(constant.MYSQL_CFNAME)
+	if err != nil {
+		return nil, err
+	}
 	return dbkit.PaginateInMysql(db, filter.PageNumber, filter.PageSize, selectSql, sqlExceptSelect.ToString(), []string{"user_id", "user_age"}, data...)
 }

@@ -22,16 +22,16 @@
     },
     {
       "code": 110,
-      "name": "财务管理",
+      "name": "管理",
       "path": "/",
       "iconCls": "el-icon-document",
       "children": [
         {
-          "name": "财务管理",
+          "name": "管理1",
           "path": "#"
         },
         {
-          "name": "结算管理",
+          "name": "管理2",
           "path": "#"
         }
       ]

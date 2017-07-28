@@ -1,19 +1,17 @@
 package controllers
 
 import (
+	"encoding/json"
+	"git.fenggese.com/go_manage_system/constant"
+	"git.fenggese.com/go_manage_system/logic"
+	"git.fenggese.com/go_manage_system/models"
 	"github.com/astaxie/beego"
 	"net/http"
-	"git.gumpcome.com/gumpoa/models"
-	"git.gumpcome.com/gumpoa/constant"
-	"git.gumpcome.com/gumpoa/logic"
-	"encoding/json"
 )
 
 type AccountController struct {
 	beego.Controller
 }
-
-
 
 // @Title 添加账号
 // @reveive 用户: user_name, 账号: login_name 密码: login_pwd 角色ID: role_id
@@ -30,21 +28,14 @@ func (this *AccountController) AccountAdd() {
 		return
 	}
 
-	// 2. 检查参数
-	if account.RoleID == 0 || account.LoginName == "" || account.LoginPwd == "" || account.UserName == "" {
-		// 参数不合法
-		this.Ctx.Output.JSON(constant.RESP_CODE_PARAMS_VALUE_ERROR, true, false)
-		return
-	}
-
-	// 3. 添加账号
+	// 2. 添加账号
 	isAdd, _, err := logic.AddAccountLogic(&account)
 	if err != nil {
 		this.Ctx.Output.JSON(err, true, false)
 		return
 	}
 
-	// 4. 处理结果
+	// 3. 处理结果
 	if !isAdd {
 		// 添加失败
 		this.Ctx.Output.JSON(constant.RESP_CODE_ACCOUNT_ADD_ERROR, true, false)
@@ -54,7 +45,6 @@ func (this *AccountController) AccountAdd() {
 	result.Msg = "账号添加成功"
 	this.Ctx.Output.JSON(result, true, false)
 }
-
 
 // @Title 删除账号
 // @receive 账号: account
@@ -71,14 +61,7 @@ func (this *AccountController) AccountDelete() {
 		return
 	}
 
-	// 2. 检查参数
-	if account.ID == 0 {
-		// 参数不合法
-		this.Ctx.Output.JSON(constant.RESP_CODE_PARAMS_VALUE_ERROR, true, false)
-		return
-	}
-
-	// 3. 删除账号
+	// 2. 删除账号
 	isDelete, err := logic.DeleteAccountLogic(&account)
 	if err != nil {
 		// 删除出错
@@ -112,14 +95,7 @@ func (this *AccountController) AccountList() {
 		return
 	}
 
-	// 2. 检查参数
-	if filter.PageNumber < 1 || filter.PageSize < 0 {
-		// 参数不合法
-		this.Ctx.Output.JSON(constant.RESP_CODE_PARAMS_VALUE_ERROR, true, false)
-		return
-	}
-
-	// 3. 查询权限列表
+	// 2. 查询权限列表
 	page, err := logic.PageAccountLogic(&filter)
 	if err != nil {
 		// 权限分页查找失败
@@ -133,11 +109,10 @@ func (this *AccountController) AccountList() {
 	this.Ctx.Output.JSON(result, true, false)
 }
 
-
 // @Title 根据账号查找权限列表
 // @receive 账号 login_name
 // @router /access_list [post]
-func (this *AccountController)AccountAccessListQuery() {
+func (this *AccountController) AccountAccessListQuery() {
 	// 声明响应结构体
 	result := models.CommonWithDataResp{Code: http.StatusOK}
 
@@ -149,15 +124,8 @@ func (this *AccountController)AccountAccessListQuery() {
 		return
 	}
 
-	// 2. 检查参数
-	if account.LoginName == "" {
-		// 参数不合法
-		this.Ctx.Output.JSON(constant.RESP_CODE_PARAMS_VALUE_ERROR, true, false)
-		return
-	}
-
 	// 3. 查询权限
-	accesses,  err := logic.AccessQueryByAccountLogic(&account)
+	accesses, err := logic.AccessQueryByAccountLogic(&account)
 	if err != nil {
 		// 根据账号查找权限失败
 		this.Ctx.Output.JSON(err, true, false)
@@ -169,8 +137,6 @@ func (this *AccountController)AccountAccessListQuery() {
 	result.Data = map[string]interface{}{"accesses": accesses}
 	this.Ctx.Output.JSON(result, true, false)
 }
-
-
 
 // @Title 根据账号生成菜单
 // @receive 账号 login_name
@@ -195,7 +161,7 @@ func (this *AccountController) MenusQuery() {
 	}
 
 	// 3. 生成菜单
-	menus,  err := logic.CreateMenusLogic(&account)
+	menus, err := logic.CreateMenusLogic(&account)
 	if err != nil {
 		// 根据账号生成菜单失败
 		this.Ctx.Output.JSON(err, true, false)

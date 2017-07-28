@@ -1,10 +1,10 @@
 package dao
 
 import (
-	"git.gumpcome.com/go_kit/dbkit"
-	"git.gumpcome.com/gumpoa/constant"
-	"git.gumpcome.com/go_kit/strkit"
-	"git.gumpcome.com/gumpoa/models"
+	"git.fenggese.com/go_kit/dbkit"
+	"git.fenggese.com/go_kit/strkit"
+	"git.fenggese.com/go_manage_system/constant"
+	"git.fenggese.com/go_manage_system/models"
 )
 
 // @Title 添加账号
@@ -20,8 +20,6 @@ func AddAccountDao(params *map[string]interface{}) (bool, int64, error) {
 	// 2. 保存数据
 	return dbkit.SaveInMysql(db, constant.ACCOUNT_TABLE, *params)
 }
-
-
 
 // @Title 删除账号
 // @return 是否成功(bool)、插入后的ID(int64)、报错信息(error)
@@ -40,7 +38,6 @@ func DeleteAccountDao(params *map[string]interface{}) (bool, error) {
 	return dbkit.DeleteInMysql(db, sql, data...)
 }
 
-
 // @Title 账号分页查找
 // @return 分页结果(dbkitPage)、报错信息(error)
 func PageAccountDao(filter *models.PageAccountFilter) (dbkit.Page, error) {
@@ -58,15 +55,14 @@ func PageAccountDao(filter *models.PageAccountFilter) (dbkit.Page, error) {
 	return dbkit.PaginateInMysql(db, filter.PageNumber, filter.PageSize, selectSql, sqlExceptSelect.ToString(), []string{"account.id"}, data...)
 }
 
-
 // @Title 根据账号信息查询数据库
-func LoginDao(account *models.Account) (int, error) {
+func LoginDao(params *map[string]interface{}) (int, error) {
 	// 1. 准备sql和数据
 	sql := `SELECT count(*) AS count FROM account WHERE login_name=? AND login_pwd=?`
 	db, _ := dbkit.GetMysqlCon(constant.MYSQL_CFNAME)
 	data := []interface{}{
-		account.LoginName,
-		account.LoginPwd,
+		(*params)["login_name"],
+		(*params)["login_pwd"],
 	}
 	var count int
 
@@ -85,7 +81,6 @@ func LoginDao(account *models.Account) (int, error) {
 	}
 	return count, err
 }
-
 
 // @Title 查询账号的权限
 // @return 查询结果、报错信息(error)

@@ -1,30 +1,16 @@
 package controllers
 
 import (
+	"git.fenggese.com/go_manage_system/constant"
+	"git.fenggese.com/go_manage_system/logic"
+	"git.fenggese.com/go_manage_system/models"
 	"github.com/astaxie/beego"
-	"git.gumpcome.com/gumpoa/logic"
-	"git.gumpcome.com/gumpoa/models"
-	"git.gumpcome.com/gumpoa/constant"
 	"net/http"
 )
 
-// 用户和用户权限相关的控制器
+// 用户控制器
 type UserController struct {
 	beego.Controller
-}
-
-// @Title 用户登出
-// @router /logout [get]
-func (this *UserController) Logout() {
-	// TODO 待完善
-	return
-}
-
-// @Title 用户是否已经登录
-// @router /haslogined [get]
-func (this *UserController) HasLogined() {
-	// TODO 待完善
-	return
 }
 
 // @Title 用户登录

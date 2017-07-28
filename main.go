@@ -1,13 +1,13 @@
 package main
 
 import (
-	_ "git.gumpcome.com/gumpoa/routers"
-	"github.com/astaxie/beego"
-	"git.gumpcome.com/go_kit/dbkit"
-	"git.gumpcome.com/gumpoa/constant"
-	"net/http"
 	"encoding/json"
-	"git.gumpcome.com/go_kit/logkit"
+	"git.fenggese.com/go_kit/dbkit"
+	"git.fenggese.com/go_kit/logkit"
+	"git.fenggese.com/go_manage_system/constant"
+	_ "git.fenggese.com/go_manage_system/routers"
+	"github.com/astaxie/beego"
+	"net/http"
 )
 
 func main() {
@@ -37,4 +37,3 @@ func main() {
 
 	beego.Run()
 }
-

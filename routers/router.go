@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"git.gumpcome.com/gumpoa/controllers"
+	"git.fenggese.com/go_manage_system/controllers"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/plugins/cors"
 )
@@ -20,16 +20,16 @@ func init() {
 	// 主页
 	beego.Router("/", &controllers.IndexController{}, "Get:Index")
 
-	ns := beego.NewNamespace("/api.gumpcome.com/oa",
+	ns := beego.NewNamespace("/api.fenggese.com/manage",
 		// api
 		beego.NSNamespace("/v1",
-			// /api.gumpcome.com/oa/v1/user
+			// /api.fenggese.com/manage/v1/user
 			beego.NSNamespace("/user", beego.NSInclude(&controllers.UserController{})),
-			// /api.gumpcome.com/oa/v1/access
+			// /api.fenggese.com/manage/v1/access
 			beego.NSNamespace("/access", beego.NSInclude(&controllers.AccessController{})),
-			// /api.gumpcome.com/oa/v1/role
+			// /api.fenggese.com/manage/v1/role
 			beego.NSNamespace("/role", beego.NSInclude(&controllers.RoleController{})),
-			// /api.gumpcome.com/oa/v1/account
+			// /api.fenggese.com/manage/v1/account
 			beego.NSNamespace("/account", beego.NSInclude(&controllers.AccountController{})),
 		),
 	)

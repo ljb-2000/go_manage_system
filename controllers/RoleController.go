@@ -1,18 +1,17 @@
 package controllers
 
 import (
+	"encoding/json"
+	"git.fenggese.com/go_manage_system/constant"
+	"git.fenggese.com/go_manage_system/logic"
+	"git.fenggese.com/go_manage_system/models"
 	"github.com/astaxie/beego"
 	"net/http"
-	"git.gumpcome.com/gumpoa/models"
-	"git.gumpcome.com/gumpoa/constant"
-	"git.gumpcome.com/gumpoa/logic"
-	"encoding/json"
 )
 
 type RoleController struct {
 	beego.Controller
 }
-
 
 // @Title 添加角色
 // @reveive 角色名: name
@@ -29,21 +28,14 @@ func (this *RoleController) RoleAdd() {
 		return
 	}
 
-	// 2. 检查参数
-	if role.Name == "" {
-		// 参数不合法
-		this.Ctx.Output.JSON(constant.RESP_CODE_PARAMS_VALUE_ERROR, true, false)
-		return
-	}
-
-	// 3. 添加角色
+	// 2. 添加角色
 	isAdd, _, err := logic.AddRoleLogic(&role)
 	if err != nil {
 		this.Ctx.Output.JSON(err, true, false)
 		return
 	}
 
-	// 4. 处理结果
+	// 3. 处理结果
 	if !isAdd {
 		// 添加失败
 		this.Ctx.Output.JSON(constant.RESP_CODE_ROLE_ADD_ERROR, true, false)
@@ -53,7 +45,6 @@ func (this *RoleController) RoleAdd() {
 	result.Msg = "角色添加成功"
 	this.Ctx.Output.JSON(result, true, false)
 }
-
 
 // @Title 为角色绑定权限
 // @reveive 角色ID: role_id 权限ID: access_id
@@ -70,21 +61,14 @@ func (this *RoleController) RoleAccessBind() {
 		return
 	}
 
-	// 2. 检查参数
-	if roleAccess.RoleID == 0 || roleAccess.AccessID == 0 {
-		// 参数不合法
-		this.Ctx.Output.JSON(constant.RESP_CODE_PARAMS_VALUE_ERROR, true, false)
-		return
-	}
-
-	// 3. 绑定权限
+	// 2. 绑定权限
 	isAdd, _, err := logic.BindAccessLogic(&roleAccess)
 	if err != nil {
 		this.Ctx.Output.JSON(err, true, false)
 		return
 	}
 
-	// 4. 处理结果
+	// 3. 处理结果
 	if !isAdd {
 		// 绑定权限失败
 		this.Ctx.Output.JSON(constant.RESP_CODE_ROLE_ACCESS_BIND_ERROR, true, false)
@@ -94,7 +78,6 @@ func (this *RoleController) RoleAccessBind() {
 	result.Msg = "为角色绑定权限成功"
 	this.Ctx.Output.JSON(result, true, false)
 }
-
 
 // @Title 为角色解绑权限
 // @reveive 角色ID: role_id 权限ID: access_id
@@ -111,21 +94,14 @@ func (this *RoleController) RoleAccessUnbind() {
 		return
 	}
 
-	// 2. 检查参数
-	if roleAccess.RoleID == 0 && roleAccess.AccessID == 0 {
-		// 参数不合法
-		this.Ctx.Output.JSON(constant.RESP_CODE_PARAMS_VALUE_ERROR, true, false)
-		return
-	}
-
-	// 3. 解绑权限
+	// 2. 解绑权限
 	isUnbind, err := logic.UnbindAccessLogic(&roleAccess)
 	if err != nil {
 		this.Ctx.Output.JSON(err, true, false)
 		return
 	}
 
-	// 4. 处理结果
+	// 3. 处理结果
 	if !isUnbind {
 		// 解除权限失败
 		this.Ctx.Output.JSON(constant.RESP_CODE_ROLE_ACCESS_UNBIND_ERROR, true, false)
@@ -135,8 +111,6 @@ func (this *RoleController) RoleAccessUnbind() {
 	result.Msg = "为角色解除权限成功"
 	this.Ctx.Output.JSON(result, true, false)
 }
-
-
 
 // @Title 角色列表
 // @receive 页数: page_number 每页结果数: page_size
@@ -150,13 +124,6 @@ func (this *RoleController) RoleList() {
 	if err := this.ParseForm(&filter); err != nil {
 		// 参数错误
 		this.Ctx.Output.JSON(constant.RESP_CODE_PARAMS_ERROR, true, false)
-		return
-	}
-
-	// 2. 检查参数
-	if filter.PageNumber < 1 || filter.PageSize < 0 {
-		// 参数不合法
-		this.Ctx.Output.JSON(constant.RESP_CODE_PARAMS_VALUE_ERROR, true, false)
 		return
 	}
 
@@ -174,8 +141,6 @@ func (this *RoleController) RoleList() {
 	this.Ctx.Output.JSON(result, true, false)
 }
 
-
-
 // @Title 查询角色的权限
 // @reveive 角色ID: role_id
 // @router /query_access [get]
@@ -191,14 +156,7 @@ func (this *RoleController) AccessQuery() {
 		return
 	}
 
-	// 2. 检查参数
-	if role_id == 0 {
-		// 参数不合法
-		this.Ctx.Output.JSON(constant.RESP_CODE_PARAMS_VALUE_ERROR, true, false)
-		return
-	}
-
-	// 3. 查询权限
+	// 2. 查询权限
 	accesses, err := logic.AccessQueryByRoleLogic(role_id)
 	if err != nil {
 		this.Ctx.Output.JSON(err, true, false)
@@ -210,8 +168,6 @@ func (this *RoleController) AccessQuery() {
 	result.Data = map[string]interface{}{"accesses": accesses}
 	this.Ctx.Output.JSON(result, true, false)
 }
-
-
 
 // @Title 删除权限
 // @receive 角色: role
@@ -228,14 +184,7 @@ func (this *RoleController) RoleDelete() {
 		return
 	}
 
-	// 2. 检查参数
-	if role.ID == 0 {
-		// 参数不合法
-		this.Ctx.Output.JSON(constant.RESP_CODE_PARAMS_VALUE_ERROR, true, false)
-		return
-	}
-
-	// 3. 删除权限
+	// 2. 删除权限
 	isDelete, err := logic.DeleteRoleLogic(role.ID)
 	if err != nil {
 		// 删除出错
@@ -243,7 +192,7 @@ func (this *RoleController) RoleDelete() {
 		return
 	}
 
-	// 4. 处理结果
+	// 3. 处理结果
 	if !isDelete {
 		// 删除失败
 		this.Ctx.Output.JSON(constant.RESP_CODE_ROLE_DELETE_ERROR, true, false)
